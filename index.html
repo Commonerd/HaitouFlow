@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+      配当フロー:
+      あなたの不労所得パイプラインを構築し、未来の配当金をシミュレーション
+    </title>
+    <meta
+      name="description"
+      content="配当フローで未来の配当金を簡単にシミュレーションし、資産形成と経済的自立を目指しましょう。シンプルな配当成長計算ツール。不労所得への道を今すぐ始めよう！"
+    />
+    <meta
+      name="keywords"
+      content="配当金, 不労所得, 資産形成, 老後資金, NISA, つみたて投資, 配当シミュレーター, 投資計算機, 経済的自立, 複利, 投資, 金融リテラシー"
+    />
+
+    <!-- Favicon SVG - Inline for simplicity -->
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath fill='%2322C55E' d='M20 80 L40 60 L60 70 L80 40 L80 80 L20 80 Z'/%3E%3Cpath fill='%2310B981' d='M85 30 L80 40 L60 70 L40 60 L15 85 L85 85 L85 30 Z'/%3E%3Cpolygon fill='%2310B981' points='60,70 80,40 85,45 65,75'/%3E%3Cpolygon fill='%2322C55E' points='40,60 60,70 65,75 45,65'/%3E%3C/svg%3E"
+      type="image/svg+xml"
+    />
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              inter: ["Inter", "sans-serif"],
+            },
+            colors: {
+              primary: "#10B981", // Emerald 600
+              secondary: "#34D399", // Emerald 400
+              accent: "#22C55E", // Green 500
+              dark: "#1F2937", // Gray 800
+              light: "#F9FAFB", // Gray 50
+            },
+          },
+        },
+      };
+    </script>
+    <!-- Google Fonts - Inter -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+
+    <style>
+      body {
+        font-family: "Inter", sans-serif;
+        background-color: #f9fafb; /* Light gray background */
+        color: #1f2937; /* Dark text */
+        line-height: 1.6;
+      }
+      .container {
+        max-width: 1024px;
+        margin: 0 auto;
+        padding: 1.5rem; /* px-6 py-4 */
+      }
+      .input-group label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: 600;
+        color: #1f2937;
+      }
+      .input-group input,
+      .input-group select {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        border: 1px solid #d1d5db; /* Gray 300 */
+        border-radius: 0.5rem; /* rounded-lg */
+        background-color: white;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+        transition: border-color 0.2s, box-shadow 0.2s;
+      }
+      .input-group input:focus,
+      .input-group select:focus {
+        outline: none;
+        border-color: #10b981; /* Primary color */
+        box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2); /* Ring effect */
+      }
+      .btn {
+        padding: 0.75rem 1.5rem;
+        border-radius: 0.5rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background-color 0.2s, transform 0.1s;
+      }
+      .btn-primary {
+        background-color: #10b981; /* Primary color */
+        color: white;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+      .btn-primary:hover {
+        background-color: #059669; /* Darker primary */
+        transform: translateY(-1px);
+      }
+      .btn-secondary {
+        background-color: #6b7280; /* Gray 500 */
+        color: white;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.07);
+      }
+      .btn-secondary:hover {
+        background-color: #4b5563; /* Darker gray */
+        transform: translateY(-1px);
+      }
+      .card {
+        background-color: white;
+        border-radius: 1rem; /* rounded-xl */
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+          0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        padding: 2rem;
+      }
+      .text-gradient {
+        background: linear-gradient(to right, #10b981, #34d399);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+    </style>
+  </head>
+  <body class="min-h-screen flex flex-col">
+    <!-- Top Ad Banner Placeholder -->
+    <div
+      id="ad-banner-top"
+      class="w-full bg-light py-2 text-center text-xs text-gray-500 border-b border-gray-200"
+    >
+      <!-- Ad Placeholder: Ideal for a top banner ad (e.g., 728x90) -->
+      <p>ここに広告が表示されます</p>
+    </div>
+
+    <header class="bg-white shadow-sm py-4">
+      <div class="container flex justify-between items-center">
+        <h1 class="text-3xl font-bold text-gradient">配当フロー</h1>
+        <nav>
+          <!-- Future navigation links could go here -->
+          <a
+            href="#"
+            class="text-gray-600 hover:text-primary transition-colors text-sm md:text-base"
+            >このサービスについて</a
+          >
+          <a
+            href="#"
+            class="ml-4 text-gray-600 hover:text-primary transition-colors text-sm md:text-base"
+            >よくある質問</a
+          >
+        </nav>
+      </div>
+    </header>
+
+    <main class="flex-grow container py-8">
+      <section class="text-center mb-8">
+        <h2 class="text-4xl md:text-5xl font-extrabold mb-4 text-dark">
+          未来の <span class="text-gradient">配当金パイプライン</span> を
+          <span class="text-gradient">シミュレーション</span>
+        </h2>
+        <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+          あなたの不労所得の成長を簡単に予測。明確な洞察で経済的自立を達成しましょう。
+        </p>
+      </section>
+
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
+        <!-- Input Card -->
+        <div class="lg:col-span-1 card">
+          <h3 class="text-2xl font-semibold mb-6 text-dark">
+            配当金シミュレーション入力
+          </h3>
+          <div class="mb-4">
+            <label
+              for="scenario-select"
+              class="block text-sm font-medium text-gray-700 mb-2"
+              >クイックスタートシナリオ:</label
+            >
+            <select
+              id="scenario-select"
+              class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary transition duration-150 ease-in-out"
+            >
+              <option value="custom">カスタム入力</option>
+              <option value="conservative">
+                堅実成長 (利回り3%, 成長率5%)
+              </option>
+              <option value="aggressive">積極成長 (利回り2%, 成長率8%)</option>
+              <option value="income">高配当重視 (利回り5%, 成長率3%)</option>
+              <option value="nisa">
+                NISA枠で積立投資 (初期投資ゼロ、年40万円、利回り3%、成長率5%)
+              </option>
+            </select>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="input-group">
+              <label for="initialInvestment">初期投資額 (円)</label>
+              <input
+                type="number"
+                id="initialInvestment"
+                value="1000000"
+                min="0"
+                step="100000"
+              />
+            </div>
+            <div class="input-group">
+              <label for="annualContribution">年間投資額 (円)</label>
+              <input
+                type="number"
+                id="annualContribution"
+                value="120000"
+                min="0"
+                step="10000"
+              />
+            </div>
+            <div class="input-group">
+              <label for="dividendYield">現在の配当利回り (%)</label>
+              <input
+                type="number"
+                id="dividendYield"
+                value="3"
+                min="0"
+                max="100"
+                step="0.1"
+              />
+            </div>
+            <div class="input-group">
+              <label for="dividendGrowthRate">年間配当成長率 (%)</label>
+              <input
+                type="number"
+                id="dividendGrowthRate"
+                value="5"
+                min="0"
+                max="100"
+                step="0.1"
+              />
+            </div>
+            <div class="input-group">
+              <label for="years">シミュレーション期間 (年)</label>
+              <input type="number" id="years" value="20" min="1" max="50" />
+            </div>
+          </div>
+
+          <div class="mt-8 flex justify-end gap-4">
+            <button id="resetBtn" class="btn btn-secondary">リセット</button>
+            <button id="calculateBtn" class="btn btn-primary">
+              計算 & 視覚化
+            </button>
+          </div>
+        </div>
+
+        <!-- Results and Chart Card -->
+        <div class="lg:col-span-2 card">
+          <h3 class="text-2xl font-semibold mb-6 text-dark">配当金予測</h3>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+            <div class="bg-light p-4 rounded-lg shadow-sm text-center">
+              <p class="text-sm text-gray-500">総投資額 (累計)</p>
+              <p id="totalInvested" class="text-2xl font-bold text-dark mt-1">
+                ¥0
+              </p>
+            </div>
+            <div class="bg-light p-4 rounded-lg shadow-sm text-center">
+              <p class="text-sm text-gray-500">受取配当金総額</p>
+              <p id="totalDividends" class="text-2xl font-bold text-dark mt-1">
+                ¥0
+              </p>
+            </div>
+            <div class="bg-light p-4 rounded-lg shadow-sm text-center">
+              <p class="text-sm text-gray-500">年間予想配当金 (最終年)</p>
+              <p
+                id="estimatedAnnualDividends"
+                class="text-2xl font-bold text-dark mt-1"
+              >
+                ¥0
+              </p>
+            </div>
+          </div>
+
+          <div class="relative h-80 md:h-96">
+            <canvas id="dividendChart"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- AdSense Placeholder - Mid-content -->
+      <div
+        id="ad-banner-mid"
+        class="w-full bg-light py-4 text-center text-xs text-gray-500 rounded-lg shadow-sm my-8"
+      >
+        <!-- Ad Placeholder: Good for a responsive display ad -->
+        <p>ここに広告が表示されます - コンテキスト広告</p>
+      </div>
+
+      <section class="card mt-8">
+        <h3 class="text-2xl font-semibold mb-4 text-dark">
+          なぜ配当フローを選ぶのか？
+        </h3>
+        <p class="text-gray-600 mb-4">
+          多くの配当金計算ツールは複雑で、深い金融知識や面倒なデータ入力を必要とします。配当フローは、その複雑さを取り除きました。私たちは、最小限の手間で複利の力を示すことに焦点を当てています。
+        </p>
+        <h4 class="text-xl font-semibold mb-2 text-dark">簡潔な力:</h4>
+        <ul class="list-disc list-inside text-gray-600 mb-4">
+          <li>
+            <strong class="text-primary">即座の洞察:</strong>
+            専門用語なしで、配当金の成長軌道をすぐに確認できます。
+          </li>
+          <li>
+            <strong class="text-primary">クイックスタートシナリオ:</strong>
+            投資計画を、あらかじめ用意されたパスで迅速に開始できます。NISAなどの日本の制度にも対応。
+          </li>
+          <li>
+            <strong class="text-primary">セッションの持続性:</strong>
+            あなたの作業は安全に保存されるため、中断したところから再開できます。
+          </li>
+        </ul>
+        <p class="text-gray-600">
+          今日から経済的自立への道を築き始めましょう。思っているよりも簡単です！
+        </p>
+      </section>
+    </main>
+
+    <!-- Bottom Ad Banner Placeholder -->
+    <div
+      id="ad-banner-bottom"
+      class="w-full bg-light py-2 text-center text-xs text-gray-500 border-t border-gray-200 mt-8"
+    >
+      <!-- Ad Placeholder: Ideal for a bottom sticky ad or another banner -->
+      <p>ここに広告が表示されます</p>
+    </div>
+
+    <footer class="bg-dark text-white py-6 mt-auto">
+      <div class="container text-center text-sm">
+        <p>
+          &copy; <span id="current-year"></span> 配当フロー. All rights
+          reserved.
+        </p>
+        <p class="mt-2">
+          <a href="#" class="text-gray-400 hover:text-primary transition-colors"
+            >プライバシーポリシー</a
+          >
+          <span class="mx-2">|</span>
+          <a href="#" class="text-gray-400 hover:text-primary transition-colors"
+            >利用規約</a
+          >
+        </p>
+        <p class="mt-2 text-gray-500 text-xs">
+          免責事項:
+          このシミュレーターは教育および情報提供のみを目的としています。金融アドバイスを構成するものではありません。投資判断を行う前に、資格のある金融専門家にご相談ください。
+        </p>
+      </div>
+    </footer>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const initialInvestmentEl =
+          document.getElementById("initialInvestment");
+        const annualContributionEl =
+          document.getElementById("annualContribution");
+        const dividendYieldEl = document.getElementById("dividendYield");
+        const dividendGrowthRateEl =
+          document.getElementById("dividendGrowthRate");
+        const yearsEl = document.getElementById("years");
+        const scenarioSelectEl = document.getElementById("scenario-select");
+        const totalInvestedEl = document.getElementById("totalInvested");
+        const totalDividendsEl = document.getElementById("totalDividends");
+        const estimatedAnnualDividendsEl = document.getElementById(
+          "estimatedAnnualDividends"
+        );
+        const calculateBtn = document.getElementById("calculateBtn");
+        const resetBtn = document.getElementById("resetBtn");
+        const chartCanvas = document.getElementById("dividendChart");
+        let dividendChart; // To hold the Chart.js instance
+
+        // Set current year in footer
+        document.getElementById("current-year").textContent =
+          new Date().getFullYear();
+
+        // --- Local Storage Management ---
+        const LOCAL_STORAGE_KEY = "haitouFlowSimulatorData";
+
+        function saveInputs() {
+          const data = {
+            initialInvestment: initialInvestmentEl.value,
+            annualContribution: annualContributionEl.value,
+            dividendYield: dividendYieldEl.value,
+            dividendGrowthRate: dividendGrowthRateEl.value,
+            years: yearsEl.value,
+            scenario: scenarioSelectEl.value, // Save current scenario
+          };
+          try {
+            localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(data));
+          } catch (e) {
+            console.error("Failed to save to local storage:", e);
+            // Optionally, show a non-intrusive message to the user
+          }
+        }
+
+        function loadInputs() {
+          try {
+            const savedData = localStorage.getItem(LOCAL_STORAGE_KEY);
+            if (savedData) {
+              const data = JSON.parse(savedData);
+              initialInvestmentEl.value = data.initialInvestment || "";
+              annualContributionEl.value = data.annualContribution || "";
+              dividendYieldEl.value = data.dividendYield || "";
+              dividendGrowthRateEl.value = data.dividendGrowthRate || "";
+              yearsEl.value = data.years || "";
+              // Load scenario, but ensure it's a valid option
+              if (
+                Array.from(scenarioSelectEl.options).some(
+                  (option) => option.value === data.scenario
+                )
+              ) {
+                scenarioSelectEl.value = data.scenario;
+              } else {
+                scenarioSelectEl.value = "custom"; // Default to custom if invalid
+              }
+              return true; // Data loaded
+            }
+          } catch (e) {
+            console.error("Failed to load from local storage:", e);
+            // Clear corrupted data
+            localStorage.removeItem(LOCAL_STORAGE_KEY);
+          }
+          return false; // No data or failed to load
+        }
+
+        function resetInputs() {
+          initialInvestmentEl.value = 1000000;
+          annualContributionEl.value = 120000;
+          dividendYieldEl.value = 3;
+          dividendGrowthRateEl.value = 5;
+          yearsEl.value = 20;
+          scenarioSelectEl.value = "custom";
+          saveInputs(); // Save default values
+          calculateDividends(); // Recalculate and update UI
+        }
+
+        // --- Simulation Logic ---
+        function calculateDividends() {
+          const initialInvestment = parseFloat(initialInvestmentEl.value) || 0;
+          const annualContribution =
+            parseFloat(annualContributionEl.value) || 0;
+          let dividendYield = parseFloat(dividendYieldEl.value) / 100 || 0; // Convert to decimal
+          const dividendGrowthRate =
+            parseFloat(dividendGrowthRateEl.value) / 100 || 0; // Convert to decimal
+          const years = parseInt(yearsEl.value) || 0;
+
+          // Basic validation
+          if (years <= 0 || dividendYield < 0 || dividendGrowthRate < 0) {
+            // Show a non-intrusive message or clear results
+            totalInvestedEl.textContent = "¥0";
+            totalDividendsEl.textContent = "¥0";
+            estimatedAnnualDividendsEl.textContent = "¥0";
+            updateChart([], [], []);
+            return;
+          }
+
+          let currentPortfolioValue = initialInvestment;
+          let totalInvested = initialInvestment;
+          let totalDividendsReceived = 0;
+          let annualDividends = [];
+          let portfolioValues = [];
+          let labels = [];
+
+          // Store initial yield to apply growth rate correctly per year
+          const startingDividendYield = dividendYield;
+
+          for (let i = 1; i <= years; i++) {
+            labels.push(`Year ${i}`);
+
+            // Adjust dividend yield for the current year based on growth rate
+            // This assumes the yield applies to the *initial* investment, and the *dividend amount* grows.
+            // A more common simplification for portfolio-level growth is to adjust the effective yield
+            const currentYearDividendYield =
+              startingDividendYield * Math.pow(1 + dividendGrowthRate, i - 1);
+
+            // Dividends received in the current year
+            const dividendsThisYear =
+              currentPortfolioValue * currentYearDividendYield;
+            totalDividendsReceived += dividendsThisYear;
+            annualDividends.push(dividendsThisYear);
+
+            // Reinvest dividends (simplistic: assumes reinvestment at current yield)
+            currentPortfolioValue += dividendsThisYear;
+
+            // Add annual contribution at the end of the year (or beginning, consistent here)
+            // If contributions are made at the beginning of the year, they'd participate in dividends too.
+            // For simplicity, added at the end, so they don't earn dividends in the current year.
+            currentPortfolioValue += annualContribution;
+            totalInvested += annualContribution;
+
+            portfolioValues.push(currentPortfolioValue);
+          }
+
+          totalInvestedEl.textContent = `¥${totalInvested.toLocaleString(
+            undefined,
+            { minimumFractionDigits: 0, maximumFractionDigits: 0 }
+          )}`;
+          totalDividendsEl.textContent = `¥${totalDividendsReceived.toLocaleString(
+            undefined,
+            { minimumFractionDigits: 0, maximumFractionDigits: 0 }
+          )}`;
+          estimatedAnnualDividendsEl.textContent = `¥${(
+            annualDividends[annualDividends.length - 1] || 0
+          ).toLocaleString(undefined, {
+            minimumFractionDigits: 0,
+            maximumFractionDigits: 0,
+          })}`;
+
+          updateChart(labels, annualDividends, portfolioValues);
+          saveInputs(); // Save inputs after calculation
+        }
+
+        // --- Charting Logic ---
+        function updateChart(labels, annualDividends, portfolioValues) {
+          const ctx = chartCanvas.getContext("2d");
+
+          if (dividendChart) {
+            dividendChart.destroy(); // Destroy previous chart instance
+          }
+
+          dividendChart = new Chart(ctx, {
+            type: "line",
+            data: {
+              labels: labels,
+              datasets: [
+                {
+                  label: "年間配当金 (円)",
+                  data: annualDividends,
+                  borderColor: "rgb(16, 185, 129)", // primary color
+                  backgroundColor: "rgba(16, 185, 129, 0.2)",
+                  fill: true,
+                  tension: 0.3,
+                  borderWidth: 2,
+                  pointRadius: 3,
+                  pointBackgroundColor: "rgb(16, 185, 129)",
+                },
+                {
+                  label: "ポートフォリオ価値 (円)",
+                  data: portfolioValues,
+                  borderColor: "rgb(52, 211, 153)", // secondary color
+                  backgroundColor: "rgba(52, 211, 153, 0.1)",
+                  fill: false,
+                  tension: 0.3,
+                  borderWidth: 2,
+                  pointRadius: 3,
+                  pointBackgroundColor: "rgb(52, 211, 153)",
+                },
+              ],
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false, // Allow canvas to fill its parent
+              plugins: {
+                legend: {
+                  display: true,
+                  position: "top",
+                  labels: {
+                    font: {
+                      size: 14,
+                      family: "Inter",
+                    },
+                    color: "#1F2937", // dark text
+                  },
+                },
+                tooltip: {
+                  callbacks: {
+                    label: function (context) {
+                      let label = context.dataset.label || "";
+                      if (label) {
+                        label += ": ";
+                      }
+                      if (context.parsed.y !== null) {
+                        label += "¥" + context.parsed.y.toLocaleString();
+                      }
+                      return label;
+                    },
+                  },
+                  titleFont: { family: "Inter" },
+                  bodyFont: { family: "Inter" },
+                  footerFont: { family: "Inter" },
+                  backgroundColor: "rgba(0, 0, 0, 0.8)",
+                  titleColor: "white",
+                  bodyColor: "white",
+                  borderColor: "rgba(16, 185, 129, 0.5)",
+                  borderWidth: 1,
+                  borderRadius: 8,
+                },
+              },
+              scales: {
+                x: {
+                  title: {
+                    display: true,
+                    text: "年",
+                    color: "#1F2937",
+                    font: { size: 16, family: "Inter", weight: "bold" },
+                  },
+                  ticks: {
+                    color: "#4B5563", // gray 700
+                    font: { family: "Inter" },
+                  },
+                  grid: {
+                    color: "#E5E7EB", // gray 200
+                  },
+                },
+                y: {
+                  title: {
+                    display: true,
+                    text: "金額 (円)",
+                    color: "#1F2937",
+                    font: { size: 16, family: "Inter", weight: "bold" },
+                  },
+                  ticks: {
+                    callback: function (value, index, values) {
+                      return "¥" + value.toLocaleString();
+                    },
+                    color: "#4B5563",
+                    font: { family: "Inter" },
+                  },
+                  grid: {
+                    color: "#E5E7EB",
+                  },
+                },
+              },
+            },
+          });
+        }
+
+        // --- Event Listeners ---
+        calculateBtn.addEventListener("click", calculateDividends);
+        resetBtn.addEventListener("click", resetInputs);
+
+        // Auto-calculate on input change for instant visualization
+        const inputElements = [
+          initialInvestmentEl,
+          annualContributionEl,
+          dividendYieldEl,
+          dividendGrowthRateEl,
+          yearsEl,
+        ];
+        inputElements.forEach((input) => {
+          input.addEventListener("input", calculateDividends);
+        });
+
+        // Quick-Start Scenario handler
+        scenarioSelectEl.addEventListener("change", function () {
+          const selectedScenario = this.value;
+          if (selectedScenario === "conservative") {
+            initialInvestmentEl.value = 1000000; // 100万円
+            annualContributionEl.value = 120000; // 12万円
+            dividendYieldEl.value = 3;
+            dividendGrowthRateEl.value = 5;
+            yearsEl.value = 20;
+          } else if (selectedScenario === "aggressive") {
+            initialInvestmentEl.value = 500000; // 50万円
+            annualContributionEl.value = 240000; // 24万円
+            dividendYieldEl.value = 2;
+            dividendGrowthRateEl.value = 8;
+            yearsEl.value = 25;
+          } else if (selectedScenario === "income") {
+            initialInvestmentEl.value = 5000000; // 500万円
+            annualContributionEl.value = 60000; // 6万円
+            dividendYieldEl.value = 5;
+            dividendGrowthRateEl.value = 3;
+            yearsEl.value = 15;
+          } else if (selectedScenario === "nisa") {
+            initialInvestmentEl.value = 0; // NISA枠なので初期投資ゼロから
+            annualContributionEl.value = 400000; // 年間40万円 (成長投資枠上限)
+            dividendYieldEl.value = 3;
+            dividendGrowthRateEl.value = 5;
+            yearsEl.value = 20;
+          } else {
+            // 'custom' or any other case, do nothing, let user input
+            // Optionally, could reset to default values here too
+          }
+          calculateDividends(); // Recalculate with new scenario values
+        });
+
+        // Initial load: Try to load from local storage, if not, calculate defaults
+        if (!loadInputs()) {
+          calculateDividends(); // Calculate with default values if no saved data
+        } else {
+          calculateDividends(); // Calculate with loaded values
+        }
+      });
+    </script>
+  </body>
+</html>
